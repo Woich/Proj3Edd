@@ -4,7 +4,7 @@
 
 typedef struct lista{
     char nome[30];
-    int posicao[10], numAparece;
+    int *posicao, numAparece;
     struct encad *proximo,
                  *anterior;
 }Lista;
@@ -44,6 +44,7 @@ void geraArqIver(Header *baseLista){
                 strcpy(registro->nome, strPart);
 
                 //Arruma vezes que apareceu e posição
+                registro->posicao = (int*)malloc(10*sizeof(int));
                 registro->numAparece=0;
                 registro->posicao[registro->numAparece] = numChar;
                 registro->numAparece = registro->numAparece+1;
@@ -126,6 +127,7 @@ void geraArqIver(Header *baseLista){
 
         linInicial[0] = '\0';
         fgets(linInicial, 85, file);
+        printf(".");
     }
 
 }
