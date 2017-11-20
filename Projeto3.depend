@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1511217505 source:/home/woich/Documentos/Projeto EDD/Projeto3/Projeto3/Main3.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

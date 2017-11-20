@@ -28,12 +28,16 @@ void geraArqIver(Header *baseLista){
     fgets(linInicial, 85, file);
     baseLista->qtdElementos = 0;
 
+
+
     while(linInicial[0] != '\0'){
+
+        //Pega a palavra a ser avaliada;
+        linTemp = linInicial;
 
         while(linInicial[strlen(linInicial)-1] != '\n' || linInicial[strlen(linInicial)-1] != '\r'){
 
-            //Pega a palavra a ser avaliada;
-            linTemp = linInicial;
+            printf("Num Ele:%d", baseLista->qtdElementos);
 
             strPart = strsep(&linTemp, delimit);
 
@@ -88,10 +92,13 @@ void geraArqIver(Header *baseLista){
                             comparador->numAparece = comparador->numAparece+1;
                         }
 
+                        comparador=comparador->proximo;
+
                     }
                     else if(i==baseLista->qtdElementos && retornoComp != 0){
                         continue;
                     }
+
                 }
 
                 //Cadastro que será feito caso nada seja achado uma palavra igual cadastrada;
@@ -103,6 +110,7 @@ void geraArqIver(Header *baseLista){
                     strcpy(registro->nome, strPart);
 
                     //Arruma vezes que apareceu e posição
+                    registro->posicao = (int*)malloc(10*sizeof(int));
                     registro->numAparece=0;
                     registro->posicao[registro->numAparece] = numChar;
                     registro->numAparece = registro->numAparece+1;
