@@ -19,13 +19,13 @@ void geraArqIver(Header *baseLista){
 
     //ContTempo temFuncao;
     FILE *file=fopen("Historia.txt", "r");;
-    char linInicial[85],*linTemp, *strPart;
+    char linInicial[500],*linTemp, *strPart;
     char delimit[]=" .,;:";
     Lista *registro, *comparador;
     int i, retornoComp;
     long int numChar=1;
 
-    fgets(linInicial, 85, file);
+    fgets(linInicial, 500, file);
     baseLista->qtdElementos = 0;
 
 
@@ -96,6 +96,7 @@ void geraArqIver(Header *baseLista){
 
                     }
                     else if(i==baseLista->qtdElementos && retornoComp != 0){
+                        comparador=comparador->proximo;
                         continue;
                     }
 
