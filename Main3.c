@@ -71,6 +71,7 @@ void geraArqIver(Header *baseLista){
                 for(i=0 ; i<baseLista->qtdElementos ;i++){
                     retornoComp = strcmp(strPart, comparador->nome);
                     comparador=comparador->proximo;
+                    visao = baseLista->qtdElementos;
 
                     //Caso tenha uma palavra igual já cadastrada;
                     if(retornoComp == 0){
@@ -92,6 +93,8 @@ void geraArqIver(Header *baseLista){
                             comparador->numAparece = comparador->numAparece+1;
 
                         }
+
+                        break;
 
 
                     }
@@ -132,8 +135,6 @@ void geraArqIver(Header *baseLista){
                         //Corrige Refencias do arquivo Base
                         baseLista->ultimo = registro;
                         baseLista->qtdElementos = baseLista->qtdElementos + 1;
-                        visao = baseLista->qtdElementos;
-
                     }
 
                 }
