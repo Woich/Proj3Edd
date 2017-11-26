@@ -19,13 +19,13 @@ void geraArqIver(Header *baseLista){
 
     //ContTempo temFuncao;
     FILE *file=fopen("Historia.txt", "r");;
-    char linInicial[500],*linTemp, *strPart;
-    char delimit[]=" .,;:";
+    char linInicial[600],*linTemp, *strPart;
+    char delimit[]=" .,;:!?";
     Lista *registro, *comparador;
-    int i, retornoComp;
+    int i, retornoComp, retornoVazio, retornoTrave, visao;
     long int numChar=1;
 
-    fgets(linInicial, 500, file);
+    fgets(linInicial, 600, file);
     baseLista->qtdElementos = 0;
 
 
@@ -34,12 +34,11 @@ void geraArqIver(Header *baseLista){
 
         //Pega a palavra a ser avaliada;
         linTemp = linInicial;
+        strPart = strsep(&linTemp, delimit);
 
-        while(linInicial[strlen(linInicial)-1] != '\n' || linInicial[strlen(linInicial)-1] != '\r'){
+        while(strPart[0] != '\n'){
 
-            printf("Num Ele:%d", baseLista->qtdElementos);
 
-            strPart = strsep(&linTemp, delimit);
 
             if(numChar == 1){
                 //Aloca Memoria
@@ -71,6 +70,7 @@ void geraArqIver(Header *baseLista){
                 //Loop para verificar se palavra ainda não foi cadastrada;
                 for(i=0 ; i<baseLista->qtdElementos ;i++){
                     retornoComp = strcmp(strPart, comparador->nome);
+                    comparador=comparador->proximo;
 
                     //Caso tenha uma palavra igual já cadastrada;
                     if(retornoComp == 0){
@@ -90,14 +90,13 @@ void geraArqIver(Header *baseLista){
                             comparador->posicao[comparador->numAparece] = numChar;
                             //Adiciona um novo contador
                             comparador->numAparece = comparador->numAparece+1;
+
                         }
 
-                        comparador=comparador->proximo;
 
                     }
-                    else if(i==baseLista->qtdElementos && retornoComp != 0){
-                        comparador=comparador->proximo;
-                        continue;
+                    else{
+                         continue;
                     }
 
                 }
@@ -105,25 +104,37 @@ void geraArqIver(Header *baseLista){
                 //Cadastro que será feito caso nada seja achado uma palavra igual cadastrada;
                 if(i==baseLista->qtdElementos && retornoComp != 0){
 
-                    //Aloca Memoria
-                    registro = malloc(sizeof(Lista));
-                    //Copia as informações da palavra
-                    strcpy(registro->nome, strPart);
+                    retornoTrave = strcmp(strPart, "-");
+                    retornoVazio = strcmp(strPart, "");
 
-                    //Arruma vezes que apareceu e posição
-                    registro->posicao = (int*)malloc(10*sizeof(int));
-                    registro->numAparece=0;
-                    registro->posicao[registro->numAparece] = numChar;
-                    registro->numAparece = registro->numAparece+1;
+                    if(retornoTrave == 0 || retornoVazio == 0){
+                        strPart = strsep(&linTemp, delimit);
+                        continue;
+                    }
 
-                    //Corrige referencias
-                    registro->anterior = baseLista->primeiro;
-                    baseLista->primeiro->proximo = registro;
-                    registro->proximo = 0;
+                    else{
+                        //Aloca Memoria
+                        registro = malloc(sizeof(Lista));
+                        //Copia as informações da palavra
+                        strcpy(registro->nome, strPart);
 
-                    //Corrige Refencias do arquivo Base
-                    baseLista->ultimo = registro;
-                    baseLista->qtdElementos += 1;
+                        //Arruma vezes que apareceu e posição
+                        registro->posicao = (int*)malloc(10*sizeof(int));
+                        registro->numAparece=0;
+                        registro->posicao[registro->numAparece] = numChar;
+                        registro->numAparece = registro->numAparece+1;
+
+                        //Corrige referencias
+                        registro->anterior = baseLista->ultimo;
+                        baseLista->ultimo->proximo = registro;
+                        registro->proximo = 0;
+
+                        //Corrige Refencias do arquivo Base
+                        baseLista->ultimo = registro;
+                        baseLista->qtdElementos = baseLista->qtdElementos + 1;
+                        visao = baseLista->qtdElementos;
+
+                    }
 
                 }
 
@@ -132,10 +143,11 @@ void geraArqIver(Header *baseLista){
 
             }
 
+            strPart = strsep(&linTemp, delimit);
         }
 
         linInicial[0] = '\0';
-        fgets(linInicial, 85, file);
+        fgets(linInicial, 600, file);
         printf(".");
     }
 
@@ -143,20 +155,24 @@ void geraArqIver(Header *baseLista){
 
 int main(){
 
-    int opcAcao, cont;
+    int opcAcao=0, cont;
     char palavra[]="Nulo";
     Lista **arquivoInvertido;
     Header arquivoTemp;
 
-    printf("Esolha Sua Ação\n");
-    printf("(1)Ler arquivo\n");
-    scanf("%d", &opcAcao);
+    while(opcAcao != -1){
+
+        printf("Esolha Sua Ação\n");
+        printf("(1)Ler arquivo\n");
+        printf("(-1)Sair\n");
+        scanf("%d", &opcAcao);
 
 
-    switch(opcAcao){
+        switch(opcAcao){
 
-    case 1:geraArqIver(&arquivoTemp);break;
+        case 1:geraArqIver(&arquivoTemp);break;
 
+        }
     }
 
 
