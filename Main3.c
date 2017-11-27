@@ -22,7 +22,7 @@ void geraArqIver(Header *baseLista){
     char linInicial[600],*linTemp, *strPart;
     char delimit[]=" .,;:!?";
     Lista *registro, *comparador;
-    int i, retornoComp, retornoVazio, retornoTrave, visao;
+    int i, retornoComp, retornoVazio, retornoTrave, visao, visao2;
     long int numChar=1;
 
     fgets(linInicial, 600, file);
@@ -76,6 +76,8 @@ void geraArqIver(Header *baseLista){
                     //Caso tenha uma palavra igual já cadastrada;
                     if(retornoComp == 0){
 
+                        visao2 = comparador->numAparece;
+
                         //Caso já tenha o tamanho do vetor base da struct
                         if(comparador->numAparece >= 10){
                             //Realoca a memoria para poder adicionar novo elemento;
@@ -110,8 +112,14 @@ void geraArqIver(Header *baseLista){
                     retornoTrave = strcmp(strPart, "-");
                     retornoVazio = strcmp(strPart, "");
 
-                    if(retornoTrave == 0 || retornoVazio == 0){
+                    if(retornoVazio == 0){
                         strPart = strsep(&linTemp, delimit);
+                        continue;
+                    }
+
+                    else if(retornoTrave == 0){
+                        strPart = strsep(&linTemp, delimit);
+                        numChar++;
                         continue;
                     }
 
