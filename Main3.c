@@ -70,12 +70,9 @@ void geraArqIver(Header *baseLista){
                 //Loop para verificar se palavra ainda não foi cadastrada;
                 for(i=0 ; i<baseLista->qtdElementos ;i++){
                     retornoComp = strcmp(strPart, comparador->nome);
-                    visao = baseLista->qtdElementos;
 
                     //Caso tenha uma palavra igual já cadastrada;
                     if(retornoComp == 0){
-
-                        visao2 = comparador->numAparece;
 
                         //Caso já tenha o tamanho do vetor base da struct
                         if(comparador->numAparece >= 10){
@@ -157,9 +154,118 @@ void geraArqIver(Header *baseLista){
 
         linInicial[0] = '\0';
         fgets(linInicial, 600, file);
-        printf(".");
     }
 
+}
+
+void geraVetor(Lista **vetor, Header *baseLista){
+
+    int i;
+    //Esse é o elemento que será adicionado ná posição do vetor;
+    Lista *eleAdicionado = baseLista->primeiro;
+
+    //Esse for serve para arrumas todas as referencias de todos os pontos do vetor
+    for(i=0 ; i<baseLista->qtdElementos ; i++){
+
+        if(i == 0){
+
+            //Aloca a memória
+            vetor[i] = malloc(sizeof(Lista));
+            //Adiciona a referência
+            vetor[i] = eleAdicionado;
+            //Muda elemento a er adicionado
+            eleAdicionado = eleAdicionado->proximo;
+
+        }
+        else if(i == baseLista->qtdElementos-1){
+
+            //Aloca a memória
+            vetor[i] = malloc(sizeof(Lista));
+            //Adiciona a referência
+            vetor[i] = eleAdicionado;
+            //Não altera por não ter próximo elemento
+
+        }
+        else{
+            //Aloca a memória
+            vetor[i] = malloc(sizeof(Lista));
+            //Adiciona a referência
+            vetor[i] = eleAdicionado;
+            //Muda elemento a er adicionado
+            eleAdicionado = eleAdicionado->proximo;
+        }
+
+    }
+}
+
+void quickSortLista(Header *lista, Lista **vetorPont, int iniComp, int fimComp){//Esse possui inicio e fim do vetor para limitadores
+    int i=iniComp, j=fimComp;//'i' e 'j' são controladores de loops, enquanto o pivo é uma medida para a organização
+    Lista *pontAux, *pivo;//Ponteiro Auxiliar
+    int meio, retorno;
+
+    //Seleção do pivo
+    meio = (i+j)/2;
+    pivo = vetorPont[meio];
+    //Enquanto i e j não coinciderem em valor continua rodando as trocas
+    while(i <= j){
+
+        //Retorno da comparação, deve ser negativo para que o nome venha antes na ordem alfabética e positivo para que venha depois
+        retorno = strcmp(vetorPont[i]->nome, pivo->nome);
+
+        //Rodando o i
+        while(retorno <= 0){
+            i++;
+            retorno = strcmp(vetorPont[i]->nome, pivo->nome);
+        }
+        //Rodando o j
+        retorno = strcmp(vetorPont[j]->nome, pivo->nome);
+
+        while(retorno > 0){
+            j--;
+            retorno = strcmp(vetorPont[j]->nome, pivo->nome);
+        }
+        if(i < j){
+
+            //Atribui valor para o auxiliar
+            pontAux = vetorPont[i];
+
+            //Troca valor de vetorPont[i]
+            vetorPont[i] = vetorPont[j-1];
+
+            //troca valor de vetorPont[j]
+            vetorPont[j-1] = pontAux;
+
+            i++;
+            j--;
+        }
+
+    }
+    //Secção baseada no 'j'
+    if(j > iniComp){
+        quickSortLista(lista, vetorPont, iniComp, j);
+    }
+    //Secção baseada no 'i'
+    if(i< fimComp){
+        quickSortLista(lista, vetorPont, i, fimComp);
+    }
+
+}
+
+void imprimeArquivoIver(Lista **arquivoIver, Header *baseLista){
+    int i, j;
+
+    for(i=0; i<baseLista->qtdElementos; i++){
+
+        printf("%d:%s - ", i+1, arquivoIver[i]->nome);
+
+        for(j=0 ; j<arquivoIver[i]->numAparece ; j++){
+
+            printf("%d,", arquivoIver[i]->posicao[j]);
+        }
+
+        printf("\n\n");
+
+    }
 }
 
 int main(){
@@ -171,15 +277,25 @@ int main(){
 
     while(opcAcao != -1){
 
-        printf("Esolha Sua Ação\n");
-        printf("(1)Ler arquivo\n");
-        printf("(-1)Sair\n");
+        printf("..............................\n"
+               "|    ESCOLHA SUA ACAO        |\n"
+               "|   (01)Ler arquivo          |\n"
+               "|   (02)Imprimir arquivo     |\n"
+               "|   (-1)Sair                 |\n"
+               "..............................\n");
         scanf("%d", &opcAcao);
 
 
         switch(opcAcao){
 
-        case 1:geraArqIver(&arquivoTemp);break;
+        case 1:geraArqIver(&arquivoTemp);
+               //Essa opção serve para gerar um vetor de ponteiros que é uma ferramenta mais fácil de se trabalhar;
+               arquivoInvertido = malloc(arquivoTemp.qtdElementos * sizeof(Lista));
+               geraVetor(arquivoInvertido, &arquivoTemp);
+               quickSortLista(&arquivoTemp, arquivoInvertido, 0, arquivoTemp.qtdElementos-1);
+               break;
+
+        case 2:imprimeArquivoIver(arquivoInvertido, &arquivoTemp);break;
 
         }
     }
