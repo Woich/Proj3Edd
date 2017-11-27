@@ -5,7 +5,7 @@
 typedef struct lista{
     char nome[30];
     int *posicao, numAparece;
-    struct encad *proximo,
+    struct lista *proximo,
                  *anterior;
 }Lista;
 
@@ -70,7 +70,6 @@ void geraArqIver(Header *baseLista){
                 //Loop para verificar se palavra ainda não foi cadastrada;
                 for(i=0 ; i<baseLista->qtdElementos ;i++){
                     retornoComp = strcmp(strPart, comparador->nome);
-                    comparador=comparador->proximo;
                     visao = baseLista->qtdElementos;
 
                     //Caso tenha uma palavra igual já cadastrada;
@@ -101,7 +100,8 @@ void geraArqIver(Header *baseLista){
 
                     }
                     else{
-                         continue;
+                        comparador=comparador->proximo;
+                        continue;
                     }
 
                 }
