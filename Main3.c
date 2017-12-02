@@ -216,7 +216,7 @@ void quickSortLista(Header *lista, Lista **vetorPont, int iniComp, int fimComp){
         for(i=iniComp; i<fimComp ; i++){
 
             //Caso a string seja menor que o pivo e o 'i' não seja delimit para evitar uma troca de elemento com ele mesmo
-            if(strcmp(vetorPont[i]->nome, pivo->nome) < 0){
+            if(strcmp(vetorPont[i]->nome, pivo->nome) <= 0 ){
                 //Realizamos a troca
                 pontAux = vetorPont[i];
 
@@ -243,12 +243,10 @@ void quickSortLista(Header *lista, Lista **vetorPont, int iniComp, int fimComp){
 
         //Organiza as partes
         quickSortLista(lista, vetorPont, iniComp, delimit-1);
-        quickSortLista(lista, vetorPont, delimit, fimComp);
+        quickSortLista(lista, vetorPont, delimit+1, fimComp);
 
     }
 }
-
-
 
 void imprimeArquivoIver(Lista **arquivoIver, Header *baseLista){
     int i, j;
@@ -267,21 +265,23 @@ void imprimeArquivoIver(Lista **arquivoIver, Header *baseLista){
     }
 }
 
+Lista pesquisaBinaria(Lista *palRetorno, Lista **vetorArquivoInver, int tamArquivo){}
+
 int main(){
 
     int opcAcao=0, cont;
-    char palavra[]="Nulo";
-    Lista **arquivoInvertido;
+    Lista **arquivoInvertido, *palavraAva=0;
     Header arquivoTemp;
 
     while(opcAcao != -1){
 
-        printf("..............................\n"
+        printf("+----------------------------+\n"
                "|    ESCOLHA SUA ACAO        |\n"
                "|   (01)Ler arquivo          |\n"
                "|   (02)Imprimir arquivo     |\n"
+               "|   (03)Buscar Nova Palavra  |\n"
                "|   (-1)Sair                 |\n"
-               "..............................\n");
+               "+----------------------------+\n");
         scanf("%d", &opcAcao);
 
 
