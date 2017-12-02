@@ -199,57 +199,47 @@ void geraVetor(Lista **vetor, Header *baseLista){
 }
 
 void quickSortLista(Header *lista, Lista **vetorPont, int iniComp, int fimComp){//Esse possui inicio e fim do vetor para limitadores
-    int i=iniComp, j=fimComp;//'i' e 'j' são controladores de loops, enquanto o pivo é uma medida para a organização
+    int i;//'i' e 'j' são controladores de loops, enquanto o pivo é uma medida para a organização
     Lista *pontAux, *pivo;//Ponteiro Auxiliar
-    int meio, retorno;
+    int posPivo, delimit;
 
-    //Seleção do pivo
-    meio = (i+j)/2;
-    pivo = vetorPont[meio];
-    //Enquanto i e j não coinciderem em valor continua rodando as trocas
-    while(i <= j){
+    //Se inicia caso seja possível com inicio e fim sendo diferentes e o inicio sendo menor
+    if(iniComp < fimComp){
 
-        //Retorno da comparação, deve ser negativo para que o nome venha antes na ordem alfabética e positivo para que venha depois
-        retorno = strcmp(vetorPont[i]->nome, pivo->nome);
+        posPivo = (iniComp + fimComp)/2;
+        pivo = vetorPont[posPivo];
 
-        //Rodando o i
-        while(retorno <= 0){
-            i++;
-            retorno = strcmp(vetorPont[i]->nome, pivo->nome);
-        }
-        //Rodando o j
-        retorno = strcmp(vetorPont[j]->nome, pivo->nome);
+        //Delimitador que será usado para fazer a secção para as próximas chamadas da função
+        delimit = iniComp;
 
-        while(retorno > 0){
-            j--;
-            retorno = strcmp(vetorPont[j]->nome, pivo->nome);
-        }
-        if(i < j){
+        //Roda o vetor
+        for(i=iniComp; i<fimComp ; i++){
 
-            //Atribui valor para o auxiliar
-            pontAux = vetorPont[i];
+            //Caso a string seja menor que o pivo e o 'i' não seja delimit para evitar uma troca de elemento com ele mesmo
+            if(strcmp(vetorPont[i]->nome, pivo->nome) <= 0 && i != delimit){
+                //Realizamos a troca
+                pontAux = vetorPont[i];
 
-            //Troca valor de vetorPont[i]
-            vetorPont[i] = vetorPont[j-1];
+                vetorPont[i] = vetorPont[delimit];
 
-            //troca valor de vetorPont[j]
-            vetorPont[j-1] = pontAux;
+                vetorPont[delimit] = pontAux;
 
-            i++;
-            j--;
+                //Para limpar o auxiliar;
+                pontAux = 0;
+
+                //Aumenta a posição do delimit
+                delimit++;
+
+            }
+
         }
 
-    }
-    //Secção baseada no 'j'
-    if(j > iniComp){
-        quickSortLista(lista, vetorPont, iniComp, j);
-    }
-    //Secção baseada no 'i'
-    if(i< fimComp){
-        quickSortLista(lista, vetorPont, i, fimComp);
+        quickSortLista(lista, vetorPont, iniComp, delimit-1);
+        quickSortLista(lista, vetorPont, delimit, fimComp);
+
     }
 
-}
+
 
 void imprimeArquivoIver(Lista **arquivoIver, Header *baseLista){
     int i, j;
