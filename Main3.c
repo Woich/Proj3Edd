@@ -206,7 +206,7 @@ void quickSortLista(Header *lista, Lista **vetorPont, int iniComp, int fimComp){
     //Se inicia caso seja possível com inicio e fim sendo diferentes e o inicio sendo menor
     if(iniComp < fimComp){
 
-        posPivo = (iniComp + fimComp)/2;
+        posPivo = fimComp;
         pivo = vetorPont[posPivo];
 
         //Delimitador que será usado para fazer a secção para as próximas chamadas da função
@@ -216,7 +216,7 @@ void quickSortLista(Header *lista, Lista **vetorPont, int iniComp, int fimComp){
         for(i=iniComp; i<fimComp ; i++){
 
             //Caso a string seja menor que o pivo e o 'i' não seja delimit para evitar uma troca de elemento com ele mesmo
-            if(strcmp(vetorPont[i]->nome, pivo->nome) <= 0 && i != delimit){
+            if(strcmp(vetorPont[i]->nome, pivo->nome) <= 0){
                 //Realizamos a troca
                 pontAux = vetorPont[i];
 
@@ -231,9 +231,17 @@ void quickSortLista(Header *lista, Lista **vetorPont, int iniComp, int fimComp){
                 delimit++;
 
             }
-
         }
 
+        //Realiza a troca do pivo
+
+        pontAux = vetorPont[fimComp];
+
+        vetorPont[fimComp] = vetorPont[delimit];
+
+        vetorPont[delimit] = pontAux;
+
+        //Organiza as partes
         quickSortLista(lista, vetorPont, iniComp, delimit-1);
         quickSortLista(lista, vetorPont, delimit, fimComp);
 
