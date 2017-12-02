@@ -238,6 +238,7 @@ void quickSortLista(Header *lista, Lista **vetorPont, int iniComp, int fimComp){
         quickSortLista(lista, vetorPont, delimit, fimComp);
 
     }
+}
 
 
 
