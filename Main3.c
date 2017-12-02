@@ -216,7 +216,7 @@ void quickSortLista(Header *lista, Lista **vetorPont, int iniComp, int fimComp){
         for(i=iniComp; i<fimComp ; i++){
 
             //Caso a string seja menor que o pivo e o 'i' não seja delimit para evitar uma troca de elemento com ele mesmo
-            if(strcmp(vetorPont[i]->nome, pivo->nome) <= 0){
+            if(strcmp(vetorPont[i]->nome, pivo->nome) < 0){
                 //Realizamos a troca
                 pontAux = vetorPont[i];
 
