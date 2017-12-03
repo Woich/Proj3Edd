@@ -18,7 +18,7 @@ typedef struct head{
 void geraArqIver(Header *baseLista){
 
     //ContTempo temFuncao;
-    FILE *file=fopen("Historia.txt", "r");;
+    FILE *file=fopen("Historia.txt", "r");
     char linInicial[600],*linTemp, *strPart;
     char delimit[]=" .,;:!?";
     Lista *registro, *comparador;
@@ -156,6 +156,8 @@ void geraArqIver(Header *baseLista){
         fgets(linInicial, 600, file);
     }
 
+    fclose(file);
+
 }
 
 void geraVetor(Lista **vetor, Header *baseLista){
@@ -265,12 +267,181 @@ void imprimeArquivoIver(Lista **arquivoIver, Header *baseLista){
     }
 }
 
-Lista pesquisaBinaria(Lista *palRetorno, Lista **vetorArquivoInver, int tamArquivo){}
+int pesquisaBinaria(Lista **vetorArquivoInver, int tamArquivo){
+
+    int posicao,//posição a ser avaliada
+        inicio,//pisião inicial da lista ser avaliada
+        fim,// posição final da lista a ser avaliada
+        retorno;
+
+    char palavra[30];
+
+    printf("Digite a Palavra Buscada: ");
+    scanf("%s", palavra);
+    printf("\n");
+
+    inicio=0;
+    fim=tamArquivo;
+
+    while(inicio <= fim){
+        posicao = (fim + inicio)/2;
+
+        retorno = strcmp(palavra, vetorArquivoInver[posicao]);
+
+        //caso ache pare o loop
+        if(retorno == 0){
+            break;
+        }
+
+        if(retorno > 0){
+            inicio = posicao+1;
+        }
+        else{
+            fim = posicao-1;
+        }
+    }
+    //Retorno utilizado para a parte da impressão
+    if(inicio>fim){
+        return -1;
+    }
+    else{
+        return posicao;
+    }
+
+}
+
+void imprimePalavraAchada(int posicaoAchada, Lista **vetorPalavras){
+    if(posicaoAchada != -1){//Se foi encontrado a palavra no arquivo invertido
+        printf("Palavar: %s | Numero de Aparicoes: %d\n\n", vetorPalavras[posicaoAchada]->nome, vetorPalavras[posicaoAchada]->numAparece);
+    }
+    else{
+        printf("Palavra não encontrada!\n");
+    }
+}
+
+void posicaoTexto(int posicaoAchada, Lista **vetorPalavras){
+
+    FILE *file=fopen("Historia.txt", "r");
+    char linInicial[600],*linTemp, *strPart;
+    char delimit[]=" .,;:!?";
+    Lista *registro, *comparador;
+    int i=0,  proximo = 1, posicaoTxt, j, difTam, proxLin=0;
+    long int numChar=1;
+
+    fgets(linInicial, 600, file);
+
+    //Posicao no texto da palavra
+    posicaoTxt = vetorPalavras[posicaoAchada]->posicao[i];
+
+    //Proximo é o controlador a ser usado para saber se é ou não para imprimir o a próxima aparição
+    while(proximo != 0){
+
+        //Caso não esteja na linha atual, mudamos ela para ser avaliado em um novo vetor
+        if(posicaoTxt > strlen(linInicial)){
+            fgets(linInicial, 600, file);
+            posicaoTxt = posicaoTxt - strlen(linInicial);
+            proxLin = 1;//Variavel que controla necessidade de aparecer o menu de próxima palavra
+        }
+        else{
+            //Caso seja a primeira palavra da linha
+            if(posicaoTxt == 1){
+                //Mostra a aparição
+                printf("Aparicao : %d | Posicao: %d\n\n", i+1, vetorPalavras[posicaoAchada]->posicao[i]);
+                printf("(...)   ");
+
+                //Para imprimir os 50 primeiros caracteres
+                for(j=0 ; j<100 ; j++){
+                    printf("%c", linInicial[j]);
+                }
+                printf("   (...)\n\n");
+            }
+            //Caso seja o ultimo elemento da lista;
+            else if(posicaoTxt == strlen(linInicial)){
+
+                printf("Aparicao : %d | Posicao: %d\n\n", i+1, vetorPalavras[posicaoAchada]->posicao[i]);
+                printf("(...)   ");
+
+                //Para imprimir os 50 primeiros caracteres
+                for(j=posicaoTxt-100 ; j<posicaoTxt ; j++){
+                    printf("%c", linInicial[j]);
+                }
+                printf("   (...)\n\n");
+            }
+            else{
+                //Caso tenha menos de 50 caracteres para o fim da frase
+                if(strlen(linInicial) - posicaoTxt < 50){
+
+                    difTam = strlen(linInicial) - posicaoTxt;
+
+                    printf("Aparicao : %d | Posicao: %d\n\n", i+1, vetorPalavras[posicaoAchada]->posicao[i]);
+                    printf("(...)   ");
+
+                    //Para imprimir os 50 primeiros caracteres.Equanto 'j' for menor que uma ditancia que permita imprimir o fianl da lista sem atingir memória inexistente
+                    for(j= posicaoTxt-50-difTam ; j<posicaoTxt+difTam ; j++){
+                        printf("%c", linInicial[j]);
+                    }
+                    printf("   (...)\n\n");
+
+                }
+                //Caso tenha menos de 50 carcteres até o inicio do texto
+                else if(posicaoTxt < 50){
+                    difTam = posicaoTxt;
+
+                    printf("Aparicao : %d | Posicao: %d\n\n", i+1, vetorPalavras[posicaoAchada]->posicao[i]);
+                    printf("(...)   ");
+
+                    //Para imprimir os 100 caracteres a volta da palavra.Equanto 'j' for menor que uma ditancia que permita imprimir desde o inicio lista sem atingir memória inexistente
+                    for(j= 0 ; j<posicaoTxt+difTam ; j++){
+                        printf("%c", linInicial[j]);
+                    }
+                    printf("   (...)\n\n");
+                }
+                else{
+                    printf("Aparicao : %d | Posicao: %d\n\n", i+1, vetorPalavras[posicaoAchada]->posicao[i]);
+                    printf("(...)   ");
+
+                    //Para imprimir os 100 caracteres a volta da palavra
+                    for(j= posicaoTxt-50 ; j<posicaoTxt+50 ; j++){
+                        printf("%c", linInicial[j]);
+                    }
+                    printf("   (...)\n\n");
+                }
+
+            }
+
+            proxLin = 0;
+
+        }
+
+        if(proxLin != 1){
+            printf("Deseja ver proxima aparicao?\n"
+                   "(01)Sim\n"
+                   "(00)Nao\n");
+            scanf("%d", &proximo);
+            i++;
+
+            if(i == vetorPalavras[posicaoAchada]->numAparece){
+                i=0;
+            }
+
+            if(proximo == 1){
+                posicaoTxt = vetorPalavras[posicaoAchada]->posicao[i];
+            }
+            else{
+                break;
+            }
+        }
+
+    }
+
+    fclose(file);
+
+}
 
 int main(){
 
-    int opcAcao=0, cont;
-    Lista **arquivoInvertido, *palavraAva=0;
+    int opcAcao=0, cont, posicaoBusca;
+    Lista **arquivoInvertido;
     Header arquivoTemp;
 
     while(opcAcao != -1){
@@ -294,7 +465,16 @@ int main(){
                quickSortLista(&arquivoTemp, arquivoInvertido, 0, arquivoTemp.qtdElementos-1);
                break;
 
-        case 2:imprimeArquivoIver(arquivoInvertido, &arquivoTemp);break;
+        case 2:printf("\e[H\e[2J");//Referência On-line de forma de apagar a tela em linux.
+               imprimeArquivoIver(arquivoInvertido, &arquivoTemp);
+               break;
+
+        case 3:printf("\e[H\e[2J");//Referência On-line de forma de apagar a tela em linux.
+               posicaoBusca = pesquisaBinaria(arquivoInvertido, arquivoTemp.qtdElementos-1);
+               imprimePalavraAchada(posicaoBusca, arquivoInvertido);
+               posicaoTexto(posicaoBusca, arquivoInvertido);
+               printf("\e[H\e[2J");
+               break;
 
         }
     }
